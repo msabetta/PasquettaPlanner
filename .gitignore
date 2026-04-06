@@ -1,0 +1,32 @@
+# --- Cartelle di Build (Compilazione) ---
+bin/
+obj/
+
+# --- File di Visual Studio ---
+.vs/
+*.user
+*.userosscache
+*.sln.docstates
+
+# --- File di Visual Studio Code ---
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# --- Risultati dei Test ---
+TestResults/
+
+# --- File di Sistema / OS ---
+.DS_Store
+Thumbs.db
+
+# --- File Generati dal Programma (Dati locali) ---
+lista_pasquetta.txt
+*.json
+*.log
+
+# --- NuGet Packages ---
+*.nupkg
+# I pacchetti vengono ripristinati automaticamente con 'dotnet restore'
