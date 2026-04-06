@@ -1,6 +1,9 @@
 using PasquettaPlanner.Models; 
 using System.Globalization;
 using System.IO;
+using System;
+using System.Collections.Generic;
+using System.Linq; // Necessario per usare .Count()
 
 namespace PasquettaPlanner.Data;
 
@@ -12,6 +15,24 @@ public static class SalvaSuFile
     {
         File.WriteAllText(Path, contenuto);
         Console.WriteLine($"\n💾 Lista salvata in: {Path}");
+    }
+
+    public static void Esporta_Righe(List<string> righe)
+    {
+        try 
+        {
+            // Scrive tutte le righe. Se il file esiste, lo sovrascrive.
+            // Se non esiste, lo crea automaticamente.
+            File.WriteAllLines(Path, righe);
+
+            Console.WriteLine($"\n✅ Salvataggio completato!");
+            Console.WriteLine($"💾 File: {Path}");
+            Console.WriteLine($"📝 Righe scritte: {righe.Count}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"\n❌ Errore durante il salvataggio: {ex.Message}");
+        }
     }
 
     public static List<AttivitaGantt> ImportaPiano(string percorso)

@@ -27,51 +27,158 @@ if (pianoLavoro.Count == 0)
     };
 }
 
-Console.WriteLine("🍖 BENVENUTO NEL PIANIFICATORE PASQUETTA 🍷");
-Console.Write("Scegli tra le seguenti opzioni");
 
 bool continua = true;
+
 while (continua)
 {
-    Console.Write("\n 1. Inserisci partecipanti \n 2. Aggiungi Spesa \n 3. Vedi Quote \n 4. Salva su file txt \n 5. Visualizzatore Gantt \n 6. Esci dal programma \n");
+    MostraMenu();
     var scelta = Console.ReadLine();
-    if (scelta == "1"){
-        // Setup rapido partecipanti
-        Console.WriteLine("Inserisci i nomi dei partecipanti divisi da virgola:");
-        var nomi = Console.ReadLine()?.Split(',') ?? Array.Empty<string>();
-        foreach (var n in nomi) partecipanti.Add(new Partecipante { Nome = n.Trim() });        
+
+    switch (scelta)
+    {
+        case "1":
+            InserisciPartecipanti(partecipanti);
+            break;
+
+        case "2":
+            AggiungiSpesa(partecipanti, gestore);
+            break;
+
+        case "3":
+            calcolatore.CalcolaQuote(partecipanti, gestore.OttieniTotale());
+            break;
+
+        case "4":
+
+            List<string> strings = new List<string>();
+            if (partecipanti.Count == 0)
+                strings.Add("Non sono presenti partecipanti. Non può essere valutato l'estratto conto");
+            else
+            {
+                decimal totaleGenerale =  gestore.OttieniTotale();
+                decimal quotaATesta = totaleGenerale / partecipanti.Count;
+                strings.Add($"--- ESTRATTO CONTO ---");
+                strings.Add($"Totale Spesa: {totaleGenerale:C}");
+                strings.Add($"Quota individuale: {quotaATesta:C}");
+
+                foreach (var p in partecipanti)
+                {
+                    decimal bilancio = p.SpesaAnticipata - quotaATesta;
+                    string stato = bilancio >= 0 ? "Deve ricevere" : "Deve dare";
+                    strings.Add($"{p.Nome}: {stato} {Math.Abs(bilancio):C} (Anticipati: {p.SpesaAnticipata:C})");
+                }
+
+                strings.Add("Elenco degli elementi di spesa: ");
+                strings.Add("Nome  Prezzo  Categoria  AcquistatoDa  PerVegetariani");
+                foreach(var g in gestore.Spese)                
+                    strings.Add($"{g.Nome}  {g.Prezzo}  {g.Categoria}  {g.AcquistatoDa}  {g.IsPerVegetariani}");
+            }
+
+            SalvaSuFile.Esporta_Righe(strings);
+            break;
+
+        case "5":
+            ganttService.Disegna(pianoLavoro);
+            break;
+
+        case "6":
+            continua = false;
+            break;
+
+        default:
+            ScriviErrore("Scelta non valida!");
+            break;
     }
 
-    if (scelta == "2")
-    {
-        Console.Write("Cosa hai comprato? "); string cosa = Console.ReadLine()!;
-        Console.Write("Prezzo? "); decimal prezzo = decimal.Parse(Console.ReadLine()!);
-        Console.Write("Chi ha pagato? "); string chi = Console.ReadLine()!;
+    Pausa();
+}
 
-        gestore.AggiungiVoce(cosa, prezzo, "Varie", chi);
-        
-        // Aggiorna quanto ha anticipato la persona
-        var p = partecipanti.FirstOrDefault(x => x.Nome.Equals(chi, StringComparison.OrdinalIgnoreCase));
-        p?.SpesaAnticipata += prezzo; //if (p != null) p.SpesaAnticipata += prezzo;
-    }
-    
-    else if (scelta == "3")
+
+
+void MostraMenu()
+{
+    Console.Clear();
+    Console.ForegroundColor = ConsoleColor.Cyan;
+    Console.WriteLine("🍖 BENVENUTO NEL PIANIFICATORE PASQUETTA 🍷\n");
+    Console.ResetColor();
+
+    Console.WriteLine("1. Inserisci partecipanti");
+    Console.WriteLine("2. Aggiungi Spesa");
+    Console.WriteLine("3. Vedi Quote");
+    Console.WriteLine("4. Salva su file di testo");
+    Console.WriteLine("5. Visualizzatore Gantt");
+    Console.WriteLine("6. Esci");
+
+    Console.Write("\nScelta: ");
+}
+
+void InserisciPartecipanti(List<Partecipante> partecipanti)
+{
+    Console.WriteLine("Inserisci i nomi separati da virgola:");
+    var nomi = Console.ReadLine()?.Split(',') ?? Array.Empty<string>();
+
+    foreach (var n in nomi)
     {
-        calcolatore.CalcolaQuote(partecipanti, gestore.OttieniTotale());
+        var nome = n.Trim();
+        if (!string.IsNullOrEmpty(nome))
+        {
+            partecipanti.Add(new Partecipante { Nome = nome });
+            Console.WriteLine($"Aggiunto: {nome}");
+        }
     }
-    
-    else if (scelta == "4")
+}
+
+
+void AggiungiSpesa(List<Partecipante> partecipanti, GestoreLista gestore)
+{
+    Console.Write("Cosa hai comprato? ");
+    string cosa = Console.ReadLine()!;
+
+    decimal prezzo;
+    while (true)
     {
-        SalvaSuFile.Esporta($"Totale Pasquetta: {gestore.OttieniTotale():C}");
-    }
-    
-    else if (scelta == "5")
-    {
-        ganttService.Disegna(pianoLavoro);
+        Console.Write("Prezzo: ");
+        if (decimal.TryParse(Console.ReadLine(), out prezzo))
+            break;
+
+        ScriviErrore("Inserisci un numero valido!");
     }
 
-    else //esci dal programma
+    Console.Write("Chi ha pagato? ");
+    string chi = Console.ReadLine()!;
+
+    var p = partecipanti.FirstOrDefault(x =>
+        x.Nome.Equals(chi, StringComparison.OrdinalIgnoreCase));
+
+    if (p == null)
     {
-        continua = false;
+        ScriviErrore("Partecipante non trovato!");
+        return;
     }
+
+    gestore.AggiungiVoce(cosa, prezzo, "Varie", chi);
+    p.SpesaAnticipata += prezzo;
+
+    ScriviSuccesso("Spesa aggiunta!");
+}
+
+void ScriviErrore(string msg)
+{
+    Console.ForegroundColor = ConsoleColor.Red;
+    Console.WriteLine(msg);
+    Console.ResetColor();
+}
+
+void ScriviSuccesso(string msg)
+{
+    Console.ForegroundColor = ConsoleColor.Green;
+    Console.WriteLine(msg);
+    Console.ResetColor();
+}
+
+void Pausa()
+{
+    Console.WriteLine("\nPremi Invio per continuare...");
+    Console.ReadLine();
 }

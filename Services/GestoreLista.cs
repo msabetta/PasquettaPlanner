@@ -12,4 +12,5 @@ public class GestoreLista
     }
 
     public decimal OttieniTotale() => Spese.Sum(s => s.Prezzo);
+
 }
