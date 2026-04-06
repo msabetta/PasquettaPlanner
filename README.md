@@ -42,24 +42,22 @@ Per modificare il codice, ti consigliamo uno dei seguenti:
 
 ### 3. Git (Per versionamento)
 Se desideri clonare il repository o gestire le modifiche:
-*   [Scarica Git](https://git-scm.com)
-
+[Scarica Git](https://git-scm.com)
 
 ## 💻 Come Iniziare
 
    1. Clona il progetto o copia i file nella tua cartella locale.ù
-
+   ```
    git clone https://github.com/msabetta/PasquettaPlanner
-
+   ```
    2. Ripristina le dipendenze:
-   
+   ```
    dotnet restore
-   
+   ```
    3. Avvia l'applicazione:
-   
+   ```
    dotnet run
-   
-   
+   ```
 ## 📝 Utilizzo
 
    1. All'avvio, inserisci i nomi dei partecipanti separati da una virgola.
@@ -67,7 +65,5 @@ Se desideri clonare il repository o gestire le modifiche:
    3. Seleziona Vedi Quote per vedere istantaneamente il bilancio di ogni amico.
    4. Esci per generare il file di riepilogo lista_pasquetta.txt.
 
-
-
-
+## ✍️ Note di Sviluppo
 Sviluppato con ❤️ per la sopravvivenza dei grigliatori della domenica.
