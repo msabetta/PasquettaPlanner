@@ -85,9 +85,11 @@ Grigliata            |          ██████
 ## 🛠️ Configurazione File Input (piano_lavoro.txt)
 Il file deve trovarsi nella cartella principale del progetto con il seguente formato (Nome|Data|Durata):
 
-Spesa Carne|2026-04-10|1
+```
+Spesa Carne|2026-04-10|1 
 Marinate|2026-04-12|1
 Grigliata|2026-04-13|1
+```
 
 ## ✍️ Note di Sviluppo
 - Sviluppato con ❤️ per la sopravvivenza dei grigliatori della domenica
