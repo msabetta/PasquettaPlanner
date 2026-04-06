@@ -1,22 +1,24 @@
 # 🍖 PasquettaPlanner 🍷
 
-Un'applicazione console intuitiva scritta in **C# (.NET)** per organizzare la grigliata perfetta senza impazzire con i conti.
+Un'applicazione console intuitiva scritta in **C# (.NET)** per organizzare la grigliata perfetta, gestire le spese tra amici e monitorare i tempi di preparazione senza impazzire con i conti.
 
 ## 🚀 Funzionalità
-- **Gestione Partecipanti**: Registra chi partecipa e le relative allergie.
-- **Lista della Spesa**: Aggiungi prodotti, prezzi e assegna chi ha anticipato i soldi.
-- **Calcolatore Quote**: Divisione automatica delle spese con resoconto "chi deve dare quanto a chi".
-- **Export Dati**: Salvataggio automatico del riepilogo su file locale.
+- **Gestione Partecipanti**: Registra nomi e allergie.
+- **Calcolatore Spese**: Algoritmo per il bilancio dei debiti/crediti (chi deve dare quanto a chi).
+- **Timeline Gantt**: Visualizzazione grafica in console dei preparativi con distinzione per mesi e giorni.
+- **Importazione Dati**: Caricamento automatico del piano di lavoro da file esterno.
+- **Esportazione Dati**: Salvataggio del riepilogo finale su file `.txt`.
 
 ## 📂 Struttura del Progetto
 Il progetto segue una struttura modulare per una facile manutenzione:
 
 ```text
 📦 PasquettaPlanner
- ┣ 📂 Models        # Classi Partecipante e ElementoSpesa
- ┣ 📂 Services      # Logica di business (Calcoli e Gestione Liste)
- ┣ 📂 Data          # Gestione persistenza (Salvataggio su file)
- ┗ 📜 Program.cs    # Interfaccia utente e ciclo principale
+ ┣ 📂 Models        # Strutture dati: Partecipante, ElementoSpesa, AttivitaGantt
+ ┣ 📂 Services      # Logica: CalcolatoreSpese, GestoreLista, VisualizzatoreGantt
+ ┣ 📂 Data          # Persistenza: Import/Export su file (SalvaSuFile)
+ ┣ 📜 Program.cs    # Interfaccia utente (Menu e Input)
+ ┗ 📜 piano_lavoro.txt # File di input per la timeline
 ```
 
 ## 🛠️ Requisiti
@@ -58,12 +60,34 @@ Se desideri clonare il repository o gestire le modifiche:
    ```
    dotnet run
    ```
+   4. Segui le istruzioni a video per inserire i partecipanti e le spese.
+
 ## 📝 Utilizzo
 
    1. All'avvio, inserisci i nomi dei partecipanti separati da una virgola.
    2. Usa il menu numerico per aggiungere le spese (es. "Costine", "25.50", "Marco").
    3. Seleziona Vedi Quote per vedere istantaneamente il bilancio di ogni amico.
-   4. Esci per generare il file di riepilogo lista_pasquetta.txt.
+   4. Generare il file di riepilogo lista_pasquetta.txt.
+
+## 📅 Visualizzazione Timeline (Gantt)
+L'app genera automaticamente un diagramma temporale leggendo il file piano_lavoro.txt. La visualizzazione include l'intestazione dei mesi (stampati una sola volta) e i blocchi grafici per le attività.
+Esempio di output in Console:
+
+
+                     | MAR          APR
+Attività             | 30 31 01 02 03 04 
+---------------------------------------
+Spesa Carne          | ███
+Marinate             |       ███
+Grigliata            |          ██████
+
+## 🛠️ Configurazione File Input (piano_lavoro.txt)
+Il file deve trovarsi nella cartella principale del progetto con il seguente formato (Nome|Data|Durata):
+
+Spesa Carne|2026-04-10|1
+Marinate|2026-04-12|1
+Grigliata|2026-04-13|1
 
 ## ✍️ Note di Sviluppo
-Sviluppato con ❤️ per la sopravvivenza dei grigliatori della domenica.
+- Sviluppato con ❤️ per la sopravvivenza dei grigliatori della domenica
+- Applicativo interattivo sviluppato per organizzare la Pasquetta come un vero Project Manager
