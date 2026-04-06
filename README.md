@@ -73,13 +73,14 @@ Se desideri clonare il repository o gestire le modifiche:
 L'app genera automaticamente un diagramma temporale leggendo il file piano_lavoro.txt. La visualizzazione include l'intestazione dei mesi (stampati una sola volta) e i blocchi grafici per le attività.
 Esempio di output in Console:
 
-
+```
                      | MAR          APR
 Attività             | 30 31 01 02 03 04 
 ---------------------------------------
 Spesa Carne          | ███
 Marinate             |       ███
 Grigliata            |          ██████
+```
 
 ## 🛠️ Configurazione File Input (piano_lavoro.txt)
 Il file deve trovarsi nella cartella principale del progetto con il seguente formato (Nome|Data|Durata):
